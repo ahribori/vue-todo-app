@@ -7,15 +7,29 @@
 </head>
 <body>
 <div id="app">
-	{{ message }}
+	<ol>
+		<li v-for="todo in todos">
+			<input type="checkbox" v-model="todo.done">
+			{{todo.title}}
+		</li>
+	</ol>
 </div>
 <script>
-	const app = new Vue({
-		el: '#app',
-		data: {
-		    message: 'Hello, world!'
-		}
-	})
+    const todoApp = new Vue({
+        el: '#app',
+        data: {
+            todos: [
+                {
+                    title: '코딩',
+                    done: false,
+                },
+                {
+                    title: '장보기',
+                    done: true,
+                }
+            ]
+        }
+    });
 </script>
 </body>
 </html>
