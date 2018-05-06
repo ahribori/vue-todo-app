@@ -4,15 +4,22 @@
 	<meta charset="UTF-8">
 	<title>Todo App</title>
 	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+	<!-- Compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+	<!-- Compiled and minified JavaScript -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
 </head>
 <body>
 <div id="app">
-	<ol>
-		<li v-for="todo in todos">
-			<input type="checkbox" v-model="todo.done">
-			{{todo.title}}
-		</li>
-	</ol>
+	<div class="container">
+		<h1>TODO</h1>
+		<p v-for="todo in todos">
+			<label>
+				<input type="checkbox" v-model="todo.done"/>
+				<span>{{todo.title}}</span>
+			</label>
+		</p>
+	</div>
 </div>
 <script>
     const todoApp = new Vue({
