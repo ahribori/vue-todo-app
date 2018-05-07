@@ -2,32 +2,51 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no">
 	<title>Todo App</title>
 	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
 	<!-- Compiled and minified CSS -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<!-- Compiled and minified JavaScript -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+	<style>
+		p {
+			display: flex;
+		}
+
+		.remove-btn {
+			color: grey;
+			margin-left: 10px;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+		}
+	</style>
 </head>
 <body>
 <div id="app">
 	<div class="container">
 		<h1>TODO</h1>
 		<div class="input-field">
+
 			<div class="row">
 				<div class="input-field col s6">
-					<input placeholder="무엇을 해야합니까?" id="first_name" type="text" class="validate" v-model="todoInput">
-				</div>
-				<div class="input-field col s6">
-					<a class="waves-effect waves-light btn" v-on:click="addTodo">할 일 추가</a>
+					<input placeholder="무엇을 해야합니까?" id="first_name" type="text" class="validate" v-model="todoInput"
+						   v-on:keyup.enter="addTodo">
 				</div>
 			</div>
 		</div>
-		<p v-for="todo in todos">
+		<p v-for="(todo, index) in todos">
 			<label>
-				<input type="checkbox" v-model="todo.done"/>
-				<span>{{todo.title}}</span>
+				<input type="checkbox" v-model="todo.done" v-on:change="save" />
+				<span style="text-decoration: line-through;" v-if="todo.done">{{todo.title}}</span>
+				<span v-if="!todo.done">{{todo.title}}</span>
 			</label>
+			<span class="remove-btn" v-on:click="removeTodo(index)">
+				<i class="material-icons tiny">clear</i>
+			</span>
 		</p>
 	</div>
 </div>
@@ -36,28 +55,39 @@
         el: '#app',
         data: {
             todoInput: '',
-            todos: [
-                {
-                    title: '코딩',
-                    done: false,
-                },
-                {
-                    title: '장보기',
-                    done: true,
-                }
-            ]
+            todos: []
         },
-		methods: {
-            addTodo: function(e) {
+        methods: {
+            addTodo: function (e) {
                 if (this.todoInput.length === 0) {
-					return;
-				}
+                    this.showMessage('할 일을 입력하세요');
+                    return;
+                }
                 this.todos.push({
-					title: this.todoInput,
-					done: false,
-				})
-			}
-		},
+                    title: this.todoInput,
+                    done: false,
+                });
+                this.todoInput = '';
+                this.save();
+            },
+            removeTodo: function (index) {
+                this.todo = this.todos.splice(index, 1);
+                this.save();
+            },
+            showMessage: function (message) {
+                M.toast({ html: message });
+            },
+            save: function () {
+                localStorage.setItem('todo', JSON.stringify(this.todos));
+            },
+            load: function () {
+                const todos = JSON.parse(localStorage.getItem('todo'));
+                this.todos = todos ? todos : [];
+            },
+        },
+        mounted: function () {
+            this.load();
+        }
     });
 </script>
 </body>
