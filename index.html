@@ -23,12 +23,46 @@
 			justify-content: center;
 			cursor: pointer;
 		}
+
+		.fade-enter-active {
+			animation: fadeIn 1s;
+		}
+
+		.fade-leave-active {
+			animation: fadeIn 1s reverse;
+		}
+
+		@keyframes fadeIn {
+			from {
+				opacity: 0;
+			}
+			to {
+				opacity: 1;
+			}
+		}
+
+		.slide-fade-enter-active {
+			transition: all .3s ease;
+		}
+
+		.slide-fade-leave-active {
+			transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+		}
+
+		.slide-fade-enter, .slide-fade-leave-to
+			/* .slide-fade-leave-active below version 2.1.8 */
+		{
+			transform: translateX(10px);
+			opacity: 0;
+		}
 	</style>
 </head>
 <body>
 <div id="app">
 	<div class="container">
-		<h1>TODO</h1>
+		<transition name="fade">
+			<h1 v-if="show">TODO</h1>
+		</transition>
 		<div class="input-field">
 
 			<div class="row">
@@ -38,22 +72,25 @@
 				</div>
 			</div>
 		</div>
-		<p v-for="(todo, index) in todos">
-			<label>
-				<input type="checkbox" v-model="todo.done" v-on:change="save" />
-				<span style="text-decoration: line-through;" v-if="todo.done">{{todo.title}}</span>
-				<span v-if="!todo.done">{{todo.title}}</span>
-			</label>
-			<span class="remove-btn" v-on:click="removeTodo(index)">
-				<i class="material-icons tiny">clear</i>
-			</span>
-		</p>
+		<transition-group name="slide-fade">
+			<p v-for="(todo, index) in todos" v-bind:key="todo">
+				<label>
+					<input type="checkbox" v-model="todo.done" v-on:change="save" />
+					<span style="text-decoration: line-through;" v-if="todo.done">{{todo.title}}</span>
+					<span v-if="!todo.done">{{todo.title}}</span>
+				</label>
+				<span class="remove-btn" v-on:click="removeTodo(index)">
+					<i class="material-icons tiny">clear</i>
+				</span>
+			</p>
+		</transition-group>
 	</div>
 </div>
 <script>
     const todoApp = new Vue({
         el: '#app',
         data: {
+            show: false,
             todoInput: '',
             todos: []
         },
@@ -86,6 +123,7 @@
             },
         },
         mounted: function () {
+            this.show = true;
             this.load();
         }
     });
