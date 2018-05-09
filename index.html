@@ -1,90 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, user-scalable=no">
-	<title>Todo App</title>
-	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
-	<!-- Compiled and minified CSS -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<!-- Compiled and minified JavaScript -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
-	<style>
-		p {
-			display: flex;
-		}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <title>Todo App</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+    <style>
+        p {
+            display: flex;
+        }
 
-		.remove-btn {
-			color: grey;
-			margin-left: 10px;
-			display: inline-flex;
-			align-items: center;
-			justify-content: center;
-			cursor: pointer;
-		}
+        .remove-btn {
+            color: grey;
+            margin-left: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
 
-		.fade-enter-active {
-			animation: fadeIn 1s;
-		}
+        .fade-enter-active {
+            animation: fadeIn 1s;
+        }
 
-		.fade-leave-active {
-			animation: fadeIn 1s reverse;
-		}
+        .fade-leave-active {
+            animation: fadeIn 1s reverse;
+        }
 
-		@keyframes fadeIn {
-			from {
-				opacity: 0;
-			}
-			to {
-				opacity: 1;
-			}
-		}
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
 
-		.slide-fade-enter-active {
-			transition: all .3s ease;
-		}
+        .slide-fade-enter-active {
+            transition: all .3s ease;
+        }
 
-		.slide-fade-leave-active {
-			transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-		}
+        .slide-fade-leave-active {
+            transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+        }
 
-		.slide-fade-enter, .slide-fade-leave-to
-			/* .slide-fade-leave-active below version 2.1.8 */
-		{
-			transform: translateX(10px);
-			opacity: 0;
-		}
-	</style>
+        .slide-fade-enter, .slide-fade-leave-to
+            /* .slide-fade-leave-active below version 2.1.8 */
+        {
+            transform: translateX(10px);
+            opacity: 0;
+        }
+    </style>
 </head>
 <body>
 <div id="app">
-	<div class="container">
-		<transition name="fade">
-			<h1 v-if="show">TODO</h1>
-		</transition>
-		<div class="input-field">
+    <div class="container">
+        <transition name="fade">
+            <h1 v-if="show">TODO</h1>
+        </transition>
+        <div class="input-field">
 
-			<div class="row">
-				<div class="input-field col s6">
-					<input placeholder="무엇을 해야합니까?" id="first_name" type="text" class="validate" v-model="todoInput"
-						   v-on:keyup.enter="addTodo">
-				</div>
-			</div>
-		</div>
-		<transition-group name="slide-fade">
-			<p v-for="(todo, index) in todos" v-bind:key="todo">
-				<label>
-					<input type="checkbox" v-model="todo.done" v-on:change="save" />
-					<span style="text-decoration: line-through;" v-if="todo.done">{{todo.title}}</span>
-					<span v-if="!todo.done">{{todo.title}}</span>
-				</label>
-				<span class="remove-btn" v-on:click="removeTodo(index)">
+            <div class="row">
+                <div class="input-field col s6">
+                    <input placeholder="무엇을 해야합니까?" id="first_name" type="text" class="validate" v-model="todoInput"
+                           v-on:keyup.enter="addTodo">
+                </div>
+            </div>
+        </div>
+        <transition-group name="slide-fade">
+            <p v-for="(todo, index) in todos" v-bind:key="todo">
+                <label>
+                    <input type="checkbox" v-model="todo.done" v-on:change="save"/>
+                    <span style="text-decoration: line-through;" v-if="todo.done">{{ todo.title | capitalize }}</span>
+                    <span v-if="!todo.done">{{ todo.title | capitalize }}</span>
+                </label>
+                <span class="remove-btn" v-on:click="removeTodo(index)">
 					<i class="material-icons tiny">clear</i>
 				</span>
-			</p>
-		</transition-group>
-	</div>
+            </p>
+        </transition-group>
+    </div>
 </div>
 <script>
     const todoApp = new Vue({
@@ -112,7 +112,7 @@
                 this.save();
             },
             showMessage: function (message) {
-                M.toast({ html: message });
+                M.toast({html: message});
             },
             save: function () {
                 localStorage.setItem('todo', JSON.stringify(this.todos));
@@ -125,6 +125,13 @@
         mounted: function () {
             this.show = true;
             this.load();
+        },
+        filters: {
+            capitalize: function (value) {
+                if (!value) return ''
+                value = value.toString()
+                return value.charAt(0).toUpperCase() + value.slice(1)
+            }
         }
     });
 </script>
